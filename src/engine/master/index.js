@@ -1,4 +1,10 @@
 export default class Master {
-	masterId = "0"
-	venderId = "0"
+	constructor(props) {
+		let { masterId, venderId, item, description } = props
+
+		this.masterId = masterId
+		this.venderId = venderId
+		this.item = item
+		this.description = description
+	}
 }

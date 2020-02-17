@@ -1,19 +1,24 @@
-/**
- * Sample React Native App
- * https://github.com/facebook/react-native
- *
- * @format
- * @flow
- */
-
 import React, { Component } from 'react';
 import { Provider } from 'react-redux';
 import { PersistGate } from 'redux-persist/integration/react'
+import { COLOR, ThemeContext, getTheme } from 'react-native-material-ui'
 
 import configureStore from './src/engine/store'
 import { Navigator, ScreenId } from './src/ui'
 
 const { store, persistor } = configureStore()
+
+const uiTheme = {
+	palette: {
+		primaryColor: COLOR.green500,
+		accentColor: COLOR.pink500,
+	},
+	listItem: {
+		primaryText: {
+			color: COLOR.black
+		}
+	}
+};
 
 class App extends Component {
 	constructor(props) {
@@ -21,12 +26,15 @@ class App extends Component {
 	}
 
 	render() {
+		const theme = getTheme(uiTheme)
 		return (
-			<Provider store={store}>
-				<PersistGate loading={null} persistor={persistor}>
+			<ThemeContext.Provider value={theme}>
+				<Provider store={store}>
+					{/* <PersistGate loading={null} persistor={persistor}> */}
 					<Navigator />
-				</PersistGate>
-			</Provider>
+					{/* </PersistGate> */}
+				</Provider>
+			</ThemeContext.Provider>
 		)
 	}
 }

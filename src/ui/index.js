@@ -1,12 +1,13 @@
 import React, { Component } from 'react'
-import { NavigationContainer } from '@react-navigation/native'
+import { NavigationContainer, ThemeProvider } from '@react-navigation/native'
 import { createStackNavigator } from '@react-navigation/stack'
 
 import LoginScreen from './loginScreen'
-import OrderScreen from './orderScreen'
+import MasterListScreen from './masterList'
 
 export const ScreenId = {
 	Login: "OrderList.Login",
+	MasterList: "OrderList.MasterList",
 	Order: "OrderList.Order"
 }
 
@@ -16,14 +17,14 @@ export class Navigator extends Component {
 	render() {
 		return (
 			<NavigationContainer>
-				<Stack.Navigator>
+				<Stack.Navigator screenOptions={{ headerShown: false }} >
 					<Stack.Screen
 						name={ScreenId.Login}
 						component={LoginScreen}
 					/>
 					<Stack.Screen
-						name={ScreenId.Order}
-						component={OrderScreen}
+						name={ScreenId.MasterList}
+						component={MasterListScreen}
 					/>
 				</Stack.Navigator>
 			</NavigationContainer>
