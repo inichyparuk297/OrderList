@@ -20,23 +20,17 @@ const uiTheme = {
 	}
 };
 
-class App extends Component {
-	constructor(props) {
-		super(props)
-	}
-
-	render() {
-		const theme = getTheme(uiTheme)
-		return (
-			<ThemeContext.Provider value={theme}>
-				<Provider store={store}>
-					{/* <PersistGate loading={null} persistor={persistor}> */}
-					<Navigator />
-					{/* </PersistGate> */}
-				</Provider>
-			</ThemeContext.Provider>
-		)
-	}
+const App: React.ReactNode = () => {
+	const theme = getTheme(uiTheme)
+	return (
+		<ThemeContext.Provider value={theme}>
+			<Provider store={store}>
+				{/* <PersistGate loading={null} persistor={persistor}> */}
+				<Navigator />
+				{/* </PersistGate> */}
+			</Provider>
+		</ThemeContext.Provider>
+	)
 }
 
 export default App;

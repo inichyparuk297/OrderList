@@ -1,8 +1,10 @@
 import React from 'react'
-import * as Lodash from 'lodash'
+const Lodash = require('lodash')
 import Master from '.'
 
-const initialState = [
+type MasterStateType = Master[]
+
+const initialState: MasterStateType = [
 	new Master({ masterId: "0", venderId: "0", item: "0", description: "Description 0" }),
 	new Master({ masterId: "1", venderId: "1", item: "1", description: "Description 1" }),
 	new Master({ masterId: "2", venderId: "2", item: "2", description: "Description 2" }),
@@ -11,6 +13,6 @@ const initialState = [
 	new Master({ masterId: "5", venderId: "5", item: "5", description: "Description 5" }),
 ]
 
-export default function masters(state = initialState, action) {
+export default function masters(state: MasterStateType = initialState, action: any) {
 	return state
 }

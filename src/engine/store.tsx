@@ -1,11 +1,12 @@
 // import { AsyncStorage } from '@react-native-community/async-storage'
 import { AsyncStorage } from 'react-native'
-import { createStore, applyMiddleware } from 'redux'
+const { createStore, applyMiddleware } = require('redux')
 import { persistStore, persistCombineReducers } from 'redux-persist'
-import logger from 'redux-logger';
+const { createLogger } = require('redux-logger')
 
 import rootReducer from './rootReducer'
 
+const logger = createLogger()
 const config = {
 	key: 'root',
 	storage: AsyncStorage,

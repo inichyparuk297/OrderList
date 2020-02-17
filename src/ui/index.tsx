@@ -4,6 +4,7 @@ import { createStackNavigator } from '@react-navigation/stack'
 
 import LoginScreen from './loginScreen'
 import MasterListScreen from './masterList'
+import Master from '../engine/master'
 
 export const ScreenId = {
 	Login: "OrderList.Login",
@@ -11,22 +12,29 @@ export const ScreenId = {
 	Order: "OrderList.Order"
 }
 
-const Stack = createStackNavigator()
+export type RootStackParamList = {
+	Login: undefined
+	MasterList: {
+		masters: Master[]
+	}
+}
+
+const RootStack = createStackNavigator<RootStackParamList>()
 
 export class Navigator extends Component {
 	render() {
 		return (
 			<NavigationContainer>
-				<Stack.Navigator screenOptions={{ headerShown: false }} >
-					<Stack.Screen
-						name={ScreenId.Login}
+				<RootStack.Navigator screenOptions={{ headerShown: false }} initialRouteName="Login">
+					<RootStack.Screen
+						name="Login"
 						component={LoginScreen}
 					/>
-					<Stack.Screen
-						name={ScreenId.MasterList}
+					<RootStack.Screen
+						name="MasterList"
 						component={MasterListScreen}
 					/>
-				</Stack.Navigator>
+				</RootStack.Navigator>
 			</NavigationContainer>
 		)
 	}
