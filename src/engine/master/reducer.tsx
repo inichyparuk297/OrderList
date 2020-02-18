@@ -5,12 +5,17 @@ import Master from '.'
 type MasterStateType = Master[]
 
 const initialState: MasterStateType = [
-	new Master({ masterId: "0", venderId: "0", item: "0", description: "Description 0" }),
-	new Master({ masterId: "1", venderId: "1", item: "1", description: "Description 1" }),
-	new Master({ masterId: "2", venderId: "2", item: "2", description: "Description 2" }),
-	new Master({ masterId: "3", venderId: "3", item: "3", description: "Description 3" }),
-	new Master({ masterId: "4", venderId: "4", item: "4", description: "Description 4" }),
-	new Master({ masterId: "5", venderId: "5", item: "5", description: "Description 5" }),
+	new Master({ Id: "0", VendorId: "ABI", ItemNumber: "BB1023JB", Description: "- BABY GLOSSY:SAFARI CUTIES X3", Unit: "", CasePack: "", Cost: "7.20", OrderQty: "0", CreatedBy: "0", CreatedOn: new Date(), ModifiedBy: "0", ModifiedOn: new Date() }),
+	new Master({ Id: "1", VendorId: "ABI", ItemNumber: "BB1024LG", Description: "BABY GLOSSY: TWINKLE TWINKLE X3", Unit: "", CasePack: "", Cost: "0", OrderQty: "0", CreatedBy: "0", CreatedOn: new Date(), ModifiedBy: "0", ModifiedOn: new Date() }),
+	new Master({ Id: "2", VendorId: "ABI", ItemNumber: "BB1024XL", Description: "- BABY GLOSSY: TWINKLE TWINKLE X3", Unit: "", CasePack: "", Cost: "4.08", OrderQty: "0", CreatedBy: "0", CreatedOn: new Date(), ModifiedBy: "0", ModifiedOn: new Date() }),
+	new Master({ Id: "3", VendorId: "ABI", ItemNumber: "BB1025JB", Description: "- BABY GLOSSY: BUNDLE OF JOY X3", Unit: "", CasePack: "", Cost: "7.20", OrderQty: "0", CreatedBy: "0", CreatedOn: new Date(), ModifiedBy: "0", ModifiedOn: new Date() }),
+	new Master({ Id: "4", VendorId: "ABI", ItemNumber: "BB1025JB", Description: "BABY GLOSSY: BUNDLE OF JOY X3", Unit: "", CasePack: "", Cost: "0", OrderQty: "0", CreatedBy: "0", CreatedOn: new Date(), ModifiedBy: "0", ModifiedOn: new Date() }),
+	new Master({ Id: "5", VendorId: "ABI", ItemNumber: "BB1025XL", Description: "- BABY GLOSSY: BUNDLE OF JOY X3", Unit: "", CasePack: "", Cost: "4.08", OrderQty: "0", CreatedBy: "0", CreatedOn: new Date(), ModifiedBy: "0", ModifiedOn: new Date() }),
+	new Master({ Id: "6", VendorId: "ABI", ItemNumber: "BB1025XL", Description: "BABY GLOSSY: BUNDLE OF JOY X3", Unit: "", CasePack: "", Cost: "0", OrderQty: "0", CreatedBy: "0", CreatedOn: new Date(), ModifiedBy: "0", ModifiedOn: new Date() }),
+	new Master({ Id: "7", VendorId: "ABI", ItemNumber: "BB1026LG", Description: "- BABY GLOSSY: SWEET KISSES X3", Unit: "", CasePack: "", Cost: "3.54", OrderQty: "0", CreatedBy: "0", CreatedOn: new Date(), ModifiedBy: "0", ModifiedOn: new Date() }),
+	new Master({ Id: "8", VendorId: "ABI", ItemNumber: "BB1026LG", Description: "BABY GLOSSY: SWEET KISSES X3", Unit: "", CasePack: "", Cost: "0", OrderQty: "0", CreatedBy: "0", CreatedOn: new Date(), ModifiedBy: "0", ModifiedOn: new Date() }),
+	new Master({ Id: "9", VendorId: "ABI", ItemNumber: "BB1026XL", Description: "BABY GLOSSY: SWEET KISSES X3", Unit: "", CasePack: "", Cost: "0", OrderQty: "0", CreatedBy: "0", CreatedOn: new Date(), ModifiedBy: "0", ModifiedOn: new Date() }),
+	new Master({ Id: "10", VendorId: "ABI", ItemNumber: "BB1027LG", Description: "BABY GLOSSY: HELLO LITTLE ONE X3", Unit: "", CasePack: "", Cost: "0", OrderQty: "0", CreatedBy: "0", CreatedOn: new Date(), ModifiedBy: "0", ModifiedOn: new Date() }),
 ]
 
 export default function masters(state: MasterStateType = initialState, action: any) {

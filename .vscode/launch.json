@@ -17,7 +17,7 @@
 			"type": "reactnative",
 			"request": "launch",
 			"platform": "android",
-			"target": "192.168.158.101:5555"
+			"target": "emulator-5554"
 		}
 	]
 }

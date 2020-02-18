@@ -9,15 +9,6 @@ import { Navigator, ScreenId } from './src/ui'
 const { store, persistor } = configureStore()
 
 const uiTheme = {
-	palette: {
-		primaryColor: COLOR.green500,
-		accentColor: COLOR.pink500,
-	},
-	listItem: {
-		primaryText: {
-			color: COLOR.black
-		}
-	}
 };
 
 const App: React.ReactNode = () => {

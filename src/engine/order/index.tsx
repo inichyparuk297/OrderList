@@ -1,6 +1,7 @@
-type MasterType = {
+type OrderType = {
 	param?: any
 	Id: string
+	StoreID: string
 	VendorId: string
 	ItemNumber: string
 	Description: string
@@ -8,29 +9,31 @@ type MasterType = {
 	Unit: string
 	CasePack: string
 	Cost: string
-	CreatedOn: any // date
 	CreatedBy: string
-	ModifiedOn: any /// date
+	CreatedOn: any
 	ModifiedBy: string
+	ModifiedOn: any // date
 }
 
-export default class Master implements MasterType {
-	Id = "0"
-	VendorId = "0"
-	ItemNumber = "0"
+export default class Order implements OrderType {
+	Id = ""
+	StoreID = ""
+	VendorId = ""
+	ItemNumber = ""
 	Description = ""
-	OrderQty = "0"
-	Unit = "0"
+	OrderQty = ""
+	Unit = ""
 	CasePack = ""
-	Cost = "0"
+	Cost = ""
 	CreatedOn = new Date()
-	CreatedBy = "0"
+	CreatedBy = ""
 	ModifiedOn = new Date()
-	ModifiedBy = "0"
+	ModifiedBy = ""
 
-	constructor(props: MasterType) {
+	constructor(props: OrderType) {
 		if (props.param) {
 			this.Id = props.param.Id
+			this.StoreID = props.param.StoreID
 			this.VendorId = props.param.VendorId
 			this.ItemNumber = props.param.ItemNumber
 			this.Description = props.param.Description
@@ -38,12 +41,13 @@ export default class Master implements MasterType {
 			this.Unit = props.param.Unit
 			this.CasePack = props.param.CasePack
 			this.Cost = props.param.Cost
-			this.CreatedOn = props.param.CreatedOn
 			this.CreatedBy = props.param.CreatedBy
-			this.ModifiedOn = props.param.ModifiedOn
+			this.CreatedOn = props.param.CreatedOn
 			this.ModifiedBy = props.param.ModifiedBy
+			this.ModifiedOn = props.param.ModifiedOn
 		} else {
 			this.Id = props.Id
+			this.StoreID = props.StoreID
 			this.VendorId = props.VendorId
 			this.ItemNumber = props.ItemNumber
 			this.Description = props.Description
@@ -51,10 +55,10 @@ export default class Master implements MasterType {
 			this.Unit = props.Unit
 			this.CasePack = props.CasePack
 			this.Cost = props.Cost
-			this.CreatedOn = props.CreatedOn
 			this.CreatedBy = props.CreatedBy
-			this.ModifiedOn = props.ModifiedOn
+			this.CreatedOn = props.CreatedOn
 			this.ModifiedBy = props.ModifiedBy
+			this.ModifiedOn = props.ModifiedOn
 		}
 	}
 }

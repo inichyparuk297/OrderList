@@ -1,8 +1,8 @@
 import React, { Component } from 'react'
 import { View, Text, StyleSheet, } from 'react-native'
 import { TouchableOpacity } from 'react-native-gesture-handler'
-const { Button } = require('react-native-material-ui')
 import { StackNavigationProp } from '@react-navigation/stack'
+const { Button } = require('react-native-material-ui')
 
 import { RootStackParamList } from '.'
 import { ScreenId } from '.'
