@@ -5,17 +5,21 @@ import { createStackNavigator } from '@react-navigation/stack'
 import LoginScreen from './loginScreen'
 import MasterListScreen from './masterList'
 import OrderListScreen from './orderList'
+import AddOrderScreen from './addOrder'
 
 import Master from '../engine/master'
 import Order from '../engine/order'
+import Vendor from '../engine/vendor'
 
 export const ScreenId = {
-	Login: "OrderList.Login",
-	MasterList: "OrderList.MasterList",
-	OrderList: "OrderList.OrderList"
+	Login: "Login",
+	MasterList: "MasterList",
+	OrderList: "OrderList",
+	AddOrder: "AddOrder",
 }
 
-export type RootStackParamList = {
+export type MainStackParamList = {
+	Main: undefined
 	Login: undefined
 	MasterList: {
 		masters?: Master[]
@@ -24,29 +28,50 @@ export type RootStackParamList = {
 		master?: Master
 		orders?: Order[]
 	}
+	AddOrder: {
+		vendors: Vendor[]
+	}
 }
 
-const RootStack = createStackNavigator<RootStackParamList>()
+const MainStack = createStackNavigator<MainStackParamList>()
+const RootStack = createStackNavigator<MainStackParamList>();
+
+function MainStackScreen() {
+	return (
+		<MainStack.Navigator initialRouteName="Login" screenOptions={{ headerShown: false }}>
+			<MainStack.Screen
+				name="Login"
+				component={LoginScreen}
+			/>
+			<MainStack.Screen
+				name="MasterList"
+				component={MasterListScreen}
+			/>
+			<MainStack.Screen
+				name="OrderList"
+				component={OrderListScreen}
+			/>
+		</MainStack.Navigator>
+	)
+}
+
 
 export class Navigator extends Component {
 	render() {
 		return (
 			<NavigationContainer>
-				<RootStack.Navigator screenOptions={{ headerShown: false }} initialRouteName="Login">
+				<RootStack.Navigator mode="modal" >
 					<RootStack.Screen
-						name="Login"
-						component={LoginScreen}
+						name="Main"
+						component={MainStackScreen}
+						options={{ headerShown: false }}
 					/>
 					<RootStack.Screen
-						name="MasterList"
-						component={MasterListScreen}
-					/>
-					<RootStack.Screen
-						name="OrderList"
-						component={OrderListScreen}
+						name="AddOrder"
+						component={AddOrderScreen}
 					/>
 				</RootStack.Navigator>
-			</NavigationContainer>
+			</NavigationContainer >
 		)
 	}
 }

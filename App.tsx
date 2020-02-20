@@ -7,6 +7,7 @@ import configureStore from './src/engine/store'
 import { Navigator, ScreenId } from './src/ui'
 
 const { store, persistor } = configureStore()
+persistor.purge()
 
 const uiTheme = {
 };

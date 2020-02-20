@@ -17,7 +17,6 @@
 			"type": "reactnative",
 			"request": "launch",
 			"platform": "android",
-			"target": "emulator-5554"
 		}
 	]
 }

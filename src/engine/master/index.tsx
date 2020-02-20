@@ -58,3 +58,42 @@ export default class Master implements MasterType {
 		}
 	}
 }
+
+export const MasterSortType = {
+	VendorAscending: 0,
+	VendorDescending: 1,
+	ItemNumberAscending: 2,
+	ItemNumberDescending: 3,
+	DescriptionAscending: 4,
+	DescriptionDescending: 5,
+	OrderQtyAscending: 6,
+	OrderQtyDescending: 7,
+}
+
+export function sort(masters: Master[], sortType: number): Master[] {
+	if (sortType == MasterSortType.VendorAscending || sortType == MasterSortType.VendorDescending) {
+		return masters.sort((a: Master, b: Master) => {
+			return (sortType == MasterSortType.VendorAscending) ? a.VendorId.localeCompare(b.VendorId) : b.VendorId.localeCompare(a.VendorId)
+		})
+	}
+
+	if (sortType == MasterSortType.ItemNumberAscending || sortType == MasterSortType.ItemNumberDescending) {
+		return masters.sort((a: Master, b: Master) => {
+			return (sortType == MasterSortType.ItemNumberAscending) ? a.ItemNumber.localeCompare(b.ItemNumber) : b.ItemNumber.localeCompare(a.ItemNumber)
+		})
+	}
+
+	if (sortType == MasterSortType.DescriptionAscending || sortType == MasterSortType.DescriptionDescending) {
+		return masters.sort((a: Master, b: Master) => {
+			return (sortType == MasterSortType.DescriptionAscending) ? a.Description.localeCompare(b.Description) : b.Description.localeCompare(a.Description)
+		})
+	}
+
+	if (sortType == MasterSortType.OrderQtyAscending || sortType == MasterSortType.OrderQtyDescending) {
+		return masters.sort((a: Master, b: Master) => {
+			return (sortType == MasterSortType.OrderQtyAscending) ? a.OrderQty.localeCompare(b.OrderQty) : b.OrderQty.localeCompare(a.OrderQty)
+		})
+	}
+
+	return masters
+}

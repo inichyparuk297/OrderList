@@ -1153,6 +1153,14 @@
     "@types/react" "*"
     "@types/react-native" "*"
 
+"@types/react-native-vector-icons@^6.4.5":
+  version "6.4.5"
+  resolved "https://registry.yarnpkg.com/@types/react-native-vector-icons/-/react-native-vector-icons-6.4.5.tgz#74cbfc564bd8435e43ad6728572a0e5b49c335d1"
+  integrity sha512-JBpcjWQE4n0GlE0p6HpDDclT+uXpFC453T5k4h+B38q0utlGJhvgNr8899BoJGc1xOktA2cgqFKmFMJd0h7YaA==
+  dependencies:
+    "@types/react" "*"
+    "@types/react-native" "*"
+
 "@types/react-native@*", "@types/react-native@^0.61.15":
   version "0.61.15"
   resolved "https://registry.yarnpkg.com/@types/react-native/-/react-native-0.61.15.tgz#3b2032a9abd5e37c8a8cb0fc6a724d57811d4dbc"
@@ -4341,6 +4349,11 @@ locate-path@^5.0.0:
   dependencies:
     p-locate "^4.1.0"
 
+lodash.isequal@^4.5.0:
+  version "4.5.0"
+  resolved "https://registry.yarnpkg.com/lodash.isequal/-/lodash.isequal-4.5.0.tgz#415c4478f2bcc30120c22ce10ed3226f7d3e18e0"
+  integrity sha1-QVxEePK8wwEgwizhDtMib30+GOA=
+
 lodash.memoize@4.x:
   version "4.1.2"
   resolved "https://registry.yarnpkg.com/lodash.memoize/-/lodash.memoize-4.1.2.tgz#bcc6c49a42a2840ed997f323eada5ecd182e0bfe"
@@ -5477,6 +5490,13 @@ react-native-material-ui@^1.30.1:
     lodash.merge "^4.0.0"
     prop-types "^15.5.10"
     react-native-material-design-styles "^0.2.6"
+
+react-native-picker-select@^6.5.0:
+  version "6.5.0"
+  resolved "https://registry.yarnpkg.com/react-native-picker-select/-/react-native-picker-select-6.5.0.tgz#67f18de0cc88060e0ad03a495b7ecb716e31a00d"
+  integrity sha512-VuzQAzs3h1PvKH91OAomWqCqzimSttUFHj1jNzC9K2FZ5OG/OuTo2ri3KkBdPU1PjtakPg6OMxxNBANAXgmceA==
+  dependencies:
+    lodash.isequal "^4.5.0"
 
 react-native-reanimated@^1.7.0:
   version "1.7.0"

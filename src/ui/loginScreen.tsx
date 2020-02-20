@@ -4,11 +4,11 @@ import { TouchableOpacity } from 'react-native-gesture-handler'
 import { StackNavigationProp } from '@react-navigation/stack'
 const { Button } = require('react-native-material-ui')
 
-import { RootStackParamList } from '.'
+import { MainStackParamList } from '.'
 import { ScreenId } from '.'
 
 
-type LoginScreenNavigationProps = StackNavigationProp<RootStackParamList, "Login">
+type LoginScreenNavigationProps = StackNavigationProp<MainStackParamList, "Login">
 type Props = {
 	navigation: LoginScreenNavigationProps
 }
@@ -16,7 +16,7 @@ type Props = {
 const LoginScreen: React.FC<Props> = (props) => {
 	return (
 		<View style={styles.container} >
-			<Button primary text="Get Started" onPress={() => props.navigation.push("MasterList")} />
+			<Button raised primary text="Get Started" onPress={() => props.navigation.push("MasterList")} />
 		</View>
 	);
 }

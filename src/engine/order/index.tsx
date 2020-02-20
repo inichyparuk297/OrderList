@@ -1,18 +1,18 @@
 type OrderType = {
 	param?: any
-	Id: string
-	StoreID: string
+	Id?: string
+	StoreID?: string
 	VendorId: string
 	ItemNumber: string
 	Description: string
-	OrderQty: string
-	Unit: string
-	CasePack: string
-	Cost: string
-	CreatedBy: string
-	CreatedOn: any
-	ModifiedBy: string
-	ModifiedOn: any // date
+	OrderQty?: string
+	Unit?: string
+	CasePack?: string
+	Cost?: string
+	CreatedBy?: string
+	CreatedOn?: any
+	ModifiedBy?: string
+	ModifiedOn?: any // date
 }
 
 export default class Order implements OrderType {
@@ -46,19 +46,23 @@ export default class Order implements OrderType {
 			this.ModifiedBy = props.param.ModifiedBy
 			this.ModifiedOn = props.param.ModifiedOn
 		} else {
-			this.Id = props.Id
-			this.StoreID = props.StoreID
+			this.Id = props.Id ? props.Id : ""
+			this.StoreID = props.StoreID ? props.StoreID : ""
 			this.VendorId = props.VendorId
 			this.ItemNumber = props.ItemNumber
 			this.Description = props.Description
-			this.OrderQty = props.OrderQty
-			this.Unit = props.Unit
-			this.CasePack = props.CasePack
-			this.Cost = props.Cost
-			this.CreatedBy = props.CreatedBy
-			this.CreatedOn = props.CreatedOn
-			this.ModifiedBy = props.ModifiedBy
-			this.ModifiedOn = props.ModifiedOn
+			this.OrderQty = props.OrderQty ? props.OrderQty : "0"
+			this.Unit = props.Unit ? props.Unit : ""
+			this.CasePack = props.CasePack ? props.CasePack : ""
+			this.Cost = props.Cost ? props.Cost : ""
+			this.CreatedBy = props.CreatedBy ? props.CreatedBy : ""
+			this.CreatedOn = props.CreatedOn ? props.CreatedOn : new Date()
+			this.ModifiedBy = props.ModifiedBy ? props.ModifiedBy : ""
+			this.ModifiedOn = props.ModifiedOn ? props.ModifiedOn : new Date()
 		}
 	}
+}
+
+export const ActionType = {
+	ADD_ORDER: "ADD_ORDER"
 }
