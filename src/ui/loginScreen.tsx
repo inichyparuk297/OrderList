@@ -1,11 +1,10 @@
-import React, { Component } from 'react'
+const React = require('react')
 import { View, Text, StyleSheet, } from 'react-native'
 import { TouchableOpacity } from 'react-native-gesture-handler'
 import { StackNavigationProp } from '@react-navigation/stack'
-const { Button } = require('react-native-material-ui')
+import { Button } from 'react-native-material-ui'
 
 import { MainStackParamList } from '.'
-import { ScreenId } from '.'
 
 
 type LoginScreenNavigationProps = StackNavigationProp<MainStackParamList, "Login">
@@ -13,12 +12,24 @@ type Props = {
 	navigation: LoginScreenNavigationProps
 }
 
-const LoginScreen: React.FC<Props> = (props) => {
-	return (
-		<View style={styles.container} >
-			<Button raised primary text="Get Started" onPress={() => props.navigation.push("MasterList")} />
-		</View>
-	);
+type State = {}
+
+class LoginScreen extends React.Component<Props, State> {
+	constructor(props: Props) {
+		super(props)
+	}
+
+	onLoginBtnPress = () => {
+		this.props.navigation.navigate("MasterList");
+	}
+
+	render() {
+		return (
+			<View style={styles.container} >
+				<Button accent raised primary text="Login With Google" onPress={() => { this.onLoginBtnPress() }} />
+			</View>
+		)
+	}
 }
 
 const styles = StyleSheet.create({

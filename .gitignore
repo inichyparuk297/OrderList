@@ -61,3 +61,5 @@ buck-out/
 #Typescript
 .jest/
 dist/
+android/build
+android/app/build

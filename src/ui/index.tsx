@@ -20,7 +20,7 @@ export const ScreenId = {
 
 export type MainStackParamList = {
 	Main: undefined
-	Login: undefined
+	Login: {}
 	MasterList: {
 		masters?: Master[]
 	}

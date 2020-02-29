@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "743243679679",
+    "firebase_url": "https://gmdstoresinc.firebaseio.com",
+    "project_id": "gmdstoresinc",
+    "storage_bucket": "gmdstoresinc.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:743243679679:android:7b60f4b36c2a793a45430a",
+        "android_client_info": {
+          "package_name": "com.gmdstoresinc.superorderapp"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "743243679679-hdbi8m8u8dio0pq9dkploudtegibvac9.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCahUWqaLRtPuorbtJsCGqRNRkRBj4L5TM"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "743243679679-hdbi8m8u8dio0pq9dkploudtegibvac9.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
