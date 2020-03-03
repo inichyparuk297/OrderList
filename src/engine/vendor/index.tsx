@@ -1,16 +1,16 @@
 type VendorType = {
 	param?: any
-	Id: string
-	Name: string
-	DisplayName: string
-	CreatedBy: string
-	CreatedOn: any // date	
-	ModifiedBy: string
-	ModifiedOn: any // date
+	Id?: number
+	Name?: string
+	DisplayName?: string
+	CreatedBy?: string
+	CreatedOn?: any // date	
+	ModifiedBy?: string
+	ModifiedOn?: any // date
 }
 
 export default class Vendor implements VendorType {
-	Id = "0"
+	Id = 0
 	Name = "Ihar"
 	DisplayName = "Ihar Nichyparuk"
 	CreatedBy = "0"
@@ -28,13 +28,27 @@ export default class Vendor implements VendorType {
 			this.ModifiedBy = props.param.ModifiedBy
 			this.ModifiedOn = props.param.ModifiedOn
 		} else {
-			this.Id = props.Id
-			this.Name = props.Name
-			this.DisplayName = props.DisplayName
-			this.CreatedBy = props.CreatedBy
-			this.CreatedOn = props.CreatedOn
-			this.ModifiedBy = props.ModifiedBy
-			this.ModifiedOn = props.ModifiedOn
+			this.Id = props.Id ? props.Id : 0
+			this.Name = props.Name ? props.Name : ""
+			this.DisplayName = props.DisplayName ? props.DisplayName : ""
+			this.CreatedBy = props.CreatedBy ? props.CreatedBy : ""
+			this.CreatedOn = props.CreatedOn ? props.CreatedOn : new Date()
+			this.ModifiedBy = props.ModifiedBy ? props.ModifiedBy : ""
+			this.ModifiedOn = props.ModifiedOn ? props.ModifiedOn : new Date()
 		}
 	}
+}
+
+export type Action = {
+	type: string
+	vender: Vendor | undefined
+}
+
+export type State = {
+	isLoading: boolean
+	venders: Vendor[]
+}
+
+export const ActionTypes = {
+	LOAD: "LOAD_VENDORS"
 }

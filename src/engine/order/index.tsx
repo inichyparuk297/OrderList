@@ -1,14 +1,13 @@
 type OrderType = {
 	param?: any
-	Id?: string
-	StoreID?: string
-	VendorId: string
-	ItemNumber: string
-	Description: string
-	OrderQty?: string
+	Id?: number
+	VendorId?: number
+	ItemNumber?: string
+	Description?: string
+	OrderQty?: number
 	Unit?: string
 	CasePack?: string
-	Cost?: string
+	Cost?: number
 	CreatedBy?: string
 	CreatedOn?: any
 	ModifiedBy?: string
@@ -16,15 +15,14 @@ type OrderType = {
 }
 
 export default class Order implements OrderType {
-	Id = ""
-	StoreID = ""
-	VendorId = ""
+	Id = 0
+	VendorId = 0
 	ItemNumber = ""
 	Description = ""
-	OrderQty = ""
+	OrderQty = 0
 	Unit = ""
 	CasePack = ""
-	Cost = ""
+	Cost = 0
 	CreatedOn = new Date()
 	CreatedBy = ""
 	ModifiedOn = new Date()
@@ -33,7 +31,6 @@ export default class Order implements OrderType {
 	constructor(props: OrderType) {
 		if (props.param) {
 			this.Id = props.param.Id
-			this.StoreID = props.param.StoreID
 			this.VendorId = props.param.VendorId
 			this.ItemNumber = props.param.ItemNumber
 			this.Description = props.param.Description
@@ -46,15 +43,14 @@ export default class Order implements OrderType {
 			this.ModifiedBy = props.param.ModifiedBy
 			this.ModifiedOn = props.param.ModifiedOn
 		} else {
-			this.Id = props.Id ? props.Id : ""
-			this.StoreID = props.StoreID ? props.StoreID : ""
-			this.VendorId = props.VendorId
-			this.ItemNumber = props.ItemNumber
-			this.Description = props.Description
-			this.OrderQty = props.OrderQty ? props.OrderQty : "0"
+			this.Id = props.Id ? props.Id : 0
+			this.VendorId = props.VendorId ? props.VendorId : 0
+			this.ItemNumber = props.ItemNumber ? props.ItemNumber : ""
+			this.Description = props.Description ? props.Description : ""
+			this.OrderQty = props.OrderQty ? props.OrderQty : 0
 			this.Unit = props.Unit ? props.Unit : ""
 			this.CasePack = props.CasePack ? props.CasePack : ""
-			this.Cost = props.Cost ? props.Cost : ""
+			this.Cost = props.Cost ? props.Cost : 0
 			this.CreatedBy = props.CreatedBy ? props.CreatedBy : ""
 			this.CreatedOn = props.CreatedOn ? props.CreatedOn : new Date()
 			this.ModifiedBy = props.ModifiedBy ? props.ModifiedBy : ""
@@ -63,6 +59,17 @@ export default class Order implements OrderType {
 	}
 }
 
+export type State = {
+	isLoading: boolean
+	orders: Order[]
+}
+
+export type Action = {
+	type: string
+	order: Order
+}
+
 export const ActionType = {
-	ADD_ORDER: "ADD_ORDER"
+	ADD_ORDER: "ADD_ORDER",
+	LOAD: "LOAD_ORDER",
 }

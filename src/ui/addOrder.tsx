@@ -13,18 +13,22 @@ const { Button } = require('react-native-material-ui')
 import RNPickerSelect from 'react-native-picker-select';
 
 import { MainStackParamList } from '.'
-import Vendor from '../engine/vendor'
+import Vendor, {
+	State as VendorState,
+	ActionTypes as VendorActionTypes
+} from '../engine/vendor'
 import Order, { ActionType as OrderActionType } from '../engine/order'
 
 type NavigationProps = StackNavigationProp<MainStackParamList, "AddOrder">
 type Props = {
 	navigation: NavigationProps
-	vendors: Vendor[]
-	addOrder: Function
+	vendors: VendorState
+	addOrder: any
+	loadVendors: any
 }
 
 type State = {
-	vendor: Vendor
+	vendor?: Vendor
 	itemNumber: string
 	description: string
 }
@@ -36,7 +40,7 @@ class AddOrderScreen extends React.Component<Props, State> {
 		this.props.navigation.setOptions({ headerShown: false, cardStyle: { backgroundColor: 'rgba(0,0,0,0.8)', opacity: 1 } })
 
 		this.state = {
-			vendor: this.props.vendors[0],
+			vendor: this.props.vendors.venders.length > 0 ? this.props.vendors.venders[0] : undefined,
 			itemNumber: "",
 			description: "",
 		}
@@ -44,12 +48,16 @@ class AddOrderScreen extends React.Component<Props, State> {
 		this.onAddBtnPressed = this.onAddBtnPressed.bind(this)
 	}
 
+	componentDidMount() {
+		this.props.loadVendors()
+	}
+
 	onAddBtnPressed() {
 		const vendor = this.state.vendor
 		const itemNumber = this.state.itemNumber
 		const description = this.state.description
 		if (vendor && itemNumber && description) {
-			const order = new Order({ VendorId: vendor.Name, ItemNumber: itemNumber, Description: description })
+			const order = new Order({ VendorId: vendor.Id, ItemNumber: itemNumber, Description: description, CreatedBy: vendor.Name, CreatedOn: new Date() })
 			this.props.addOrder(order)
 			this.props.navigation.goBack()
 		}
@@ -57,10 +65,10 @@ class AddOrderScreen extends React.Component<Props, State> {
 
 	render() {
 		const vendorPickerData: any[] = []
-		this.props.vendors.map((vender: Vendor, index: number) => {
+		this.props.vendors.venders.map((vender: Vendor, index: number) => {
 			vendorPickerData.push({ label: vender.Name, value: vender.Name })
 		})
-		const selectedVendorPickerValue = this.state.vendor.Name
+		const selectedVendorPickerValue = (this.state.vendor) ? this.state.vendor.Name : ""
 		return (
 			<View style={{ flex: 1, flexDirection: "row", justifyContent: "center" }}>
 				<View style={styles.container}>
@@ -71,8 +79,8 @@ class AddOrderScreen extends React.Component<Props, State> {
 							placeholder={{ label: 'Select a vendor...', value: null, color: '#000000', }}
 							items={vendorPickerData}
 							onValueChange={(value, index) => {
-								this.props.vendors.map((item, i) => {
-									const vendor = this.props.vendors[i]
+								this.props.vendors.venders.map((item, i) => {
+									const vendor = this.props.vendors.venders[i]
 									if (value == vendor.Name) {
 										this.setState({ vendor: vendor })
 									}
@@ -196,7 +204,7 @@ const pickerSelectStyles = StyleSheet.create({
 	},
 });
 
-const mapStateToProps = (state: { vendors: Vendor[]; }) => {
+const mapStateToProps = (state: { vendors: VendorState; }) => {
 	return {
 		vendors: state.vendors,
 	};
@@ -204,6 +212,7 @@ const mapStateToProps = (state: { vendors: Vendor[]; }) => {
 
 const mapDispatchToProps = (dispatch: Dispatch) => {
 	return {
+		loadVendors: () => { dispatch({ type: VendorActionTypes.LOAD }) },
 		addOrder: (order: Order) => dispatch({ type: OrderActionType.ADD_ORDER, order: order })
 	};
 };

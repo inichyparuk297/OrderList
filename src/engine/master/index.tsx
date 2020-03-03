@@ -1,25 +1,26 @@
+import * as Api from '../helper/api'
 type MasterType = {
 	param?: any
-	Id: string
-	VendorId: string
-	ItemNumber: string
-	Description: string
-	OrderQty: string
-	Unit: string
-	CasePack: string
-	Cost: string
-	CreatedOn: any // date
-	CreatedBy: string
-	ModifiedOn: any /// date
-	ModifiedBy: string
+	Id?: number
+	VendorId?: number
+	ItemNumber?: string
+	Description?: string
+	OrderQty?: number
+	Unit?: string
+	CasePack?: string
+	Cost?: string
+	CreatedOn?: any // date
+	CreatedBy?: string
+	ModifiedOn?: any /// date
+	ModifiedBy?: string
 }
 
 export default class Master implements MasterType {
-	Id = "0"
-	VendorId = "0"
+	Id = 0
+	VendorId = 0
 	ItemNumber = "0"
 	Description = ""
-	OrderQty = "0"
+	OrderQty = 0
 	Unit = "0"
 	CasePack = ""
 	Cost = "0"
@@ -43,18 +44,18 @@ export default class Master implements MasterType {
 			this.ModifiedOn = props.param.ModifiedOn
 			this.ModifiedBy = props.param.ModifiedBy
 		} else {
-			this.Id = props.Id
-			this.VendorId = props.VendorId
-			this.ItemNumber = props.ItemNumber
-			this.Description = props.Description
-			this.OrderQty = props.OrderQty
-			this.Unit = props.Unit
-			this.CasePack = props.CasePack
-			this.Cost = props.Cost
+			this.Id = props.Id ? props.Id : 0
+			this.VendorId = props.VendorId ? props.VendorId : 0
+			this.ItemNumber = props.ItemNumber ? props.ItemNumber : ""
+			this.Description = props.Description ? props.Description : ""
+			this.OrderQty = props.OrderQty ? props.OrderQty : 0
+			this.Unit = props.Unit ? props.Unit : ""
+			this.CasePack = props.CasePack ? props.CasePack : ""
+			this.Cost = props.Cost ? props.Cost : ""
 			this.CreatedOn = props.CreatedOn
-			this.CreatedBy = props.CreatedBy
+			this.CreatedBy = props.CreatedBy ? props.CreatedBy : ""
 			this.ModifiedOn = props.ModifiedOn
-			this.ModifiedBy = props.ModifiedBy
+			this.ModifiedBy = props.ModifiedBy ? props.ModifiedBy : ""
 		}
 	}
 }
@@ -73,7 +74,7 @@ export const MasterSortType = {
 export function sort(masters: Master[], sortType: number): Master[] {
 	if (sortType == MasterSortType.VendorAscending || sortType == MasterSortType.VendorDescending) {
 		return masters.sort((a: Master, b: Master) => {
-			return (sortType == MasterSortType.VendorAscending) ? a.VendorId.localeCompare(b.VendorId) : b.VendorId.localeCompare(a.VendorId)
+			return (sortType == MasterSortType.VendorAscending) ? (a.VendorId - b.VendorId) : (b.VendorId - a.VendorId)
 		})
 	}
 
@@ -91,9 +92,25 @@ export function sort(masters: Master[], sortType: number): Master[] {
 
 	if (sortType == MasterSortType.OrderQtyAscending || sortType == MasterSortType.OrderQtyDescending) {
 		return masters.sort((a: Master, b: Master) => {
-			return (sortType == MasterSortType.OrderQtyAscending) ? a.OrderQty.localeCompare(b.OrderQty) : b.OrderQty.localeCompare(a.OrderQty)
+			return (sortType == MasterSortType.OrderQtyAscending) ? (a.OrderQty - b.OrderQty) : (b.OrderQty - a.OrderQty)
 		})
 	}
 
 	return masters
+}
+
+export type State = {
+	isLoading: boolean
+	masters: Master[]
+}
+
+export type Action = {
+	type: string
+	master?: Master
+	masters?: Master[]
+	error?: string
+}
+
+export const ActionTypes = {
+	LOAD: "LOAD_MASTER",
 }

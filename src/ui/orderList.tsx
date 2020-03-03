@@ -8,6 +8,7 @@ import {
 	FlatList,
 	TouchableOpacity,
 	ScrollView,
+	ActivityIndicator,
 } from 'react-native'
 import { Dispatch } from 'redux'
 const { ListItem, ThemeContext, Divider } = require('react-native-material-ui')
@@ -15,15 +16,14 @@ import Icon from 'react-native-vector-icons/FontAwesome'
 import { StackNavigationProp } from '@react-navigation/stack'
 
 import { MainStackParamList, ScreenId } from '.'
-import Order from '../engine/order'
-import { State as OrderState } from '../engine/order/reducer'
+import Order, { State as OrderState, ActionType as OrderActionType } from '../engine/order'
 import Master from '../engine/master'
 
 type NavigationProps = StackNavigationProp<MainStackParamList, "MasterList">
 type Props = {
 	navigation: NavigationProps
 	master: Master
-	orders: Order[]
+	orders: OrderState
 }
 
 type State = {
@@ -44,9 +44,14 @@ class OrderListScreen extends React.Component<Props, State> {
 		})
 	}
 
+	componentDidMount() {
+		this.props.loadOrder()
+	}
+
 	render() {
 		return (
 			<View>
+				{this.props.orders.isLoading && <ActivityIndicator />}
 				<View style={orderListHeaderStyle.container}>
 					<TouchableOpacity style={orderListHeaderStyle.venderContainer}>
 						<Text style={orderListHeaderStyle.vender}>VENDER</Text>
@@ -63,7 +68,7 @@ class OrderListScreen extends React.Component<Props, State> {
 				</View>
 				<ScrollView>
 					<FlatList
-						data={this.props.orders}
+						data={this.props.orders.orders}
 						renderItem={({ item }) =>
 							<TouchableOpacity>
 								<View style={orderListItemStyle.container}>
@@ -170,13 +175,13 @@ const orderListItemStyle = StyleSheet.create({
 
 const mapStateToProps = (state: { orders: OrderState; }) => {
 	return {
-		orders: state.orders.orders,
+		orders: state.orders,
 	};
 };
 
 const mapDispatchToProps = (dispatch: Dispatch) => {
 	return {
-
+		loadOrder: () => { dispatch({ type: OrderActionType.LOAD }) }
 	};
 };
 

@@ -7,6 +7,7 @@ import {
 	FlatList,
 	TouchableOpacity,
 	ScrollView,
+	ActivityIndicator,
 } from 'react-native'
 import { Dispatch } from 'redux'
 const { ListItem, ThemeContext, Divider } = require('react-native-material-ui')
@@ -14,7 +15,13 @@ import { StackNavigationProp } from '@react-navigation/stack'
 import Icon from 'react-native-vector-icons/FontAwesome'
 
 import { MainStackParamList } from '.'
-import Master, { MasterSortType, sort as sortMasters } from '../engine/master'
+import Master, {
+	MasterSortType,
+	sort as sortMasters,
+	State as MasterState,
+	Action as MasterAction,
+	ActionTypes as MasterActionTypes,
+} from '../engine/master'
 
 type NavigationProps = StackNavigationProp<MainStackParamList, "MasterList">
 type Props = {
@@ -39,6 +46,10 @@ class MasterListScreen extends React.Component<Props, State> {
 		}
 	}
 
+	componentDidMount() {
+		this.props.loadMasters()
+	}
+
 	onMasterListItemPressed = (item: Master) => {
 		this.props.navigation.navigate("OrderList", { master: item })
 	}
@@ -56,6 +67,7 @@ class MasterListScreen extends React.Component<Props, State> {
 
 		return (
 			<View>
+				{this.props.isLoading && <ActivityIndicator />}
 				<View style={masterListHeaderStyle.container}>
 					<TouchableOpacity style={masterListHeaderStyle.venderContainer} onPress={() => { this.sort((this.state.sortType == MasterSortType.VendorAscending) ? MasterSortType.VendorDescending : MasterSortType.VendorAscending) }}>
 						<View style={{ flex: 1, flexDirection: "row", }}>
@@ -205,15 +217,16 @@ const masterListItemStyle = StyleSheet.create({
 	}
 })
 
-const mapStateToProps = (state: { masters: Master[]; }) => {
+const mapStateToProps = (state: { masters: MasterState; }) => {
 	return {
-		masters: state.masters,
+		isLoading: state.masters.isLoading,
+		masters: state.masters.masters,
 	};
 };
 
 const mapDispatchToProps = (dispatch: Dispatch) => {
 	return {
-
+		loadMasters: () => { dispatch({ type: MasterActionTypes.LOAD }) }
 	};
 };
 

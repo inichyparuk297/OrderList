@@ -184,6 +184,8 @@ dependencies {
     implementation "com.facebook.react:react-native:+"  // From node_modules
 	implementation 'com.google.firebase:firebase-analytics:17.2.2'
 
+	implementation project(':react-native-mssql')
+
     if (enableHermes) {
         def hermesPath = "../../node_modules/hermes-engine/android/";
         debugImplementation files(hermesPath + "hermes-debug.aar")
