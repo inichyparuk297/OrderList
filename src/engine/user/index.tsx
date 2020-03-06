@@ -1,5 +1,3 @@
-import firebase from 'react-native-firebase'
-
 type UserType = {
 	username: string
 	password: string
@@ -20,6 +18,6 @@ export default class User implements UserType {
 }
 
 export const Actions = {
-	GOOGLELOGIN: "GOOGLELOGIN",
-	GOOGLESIGNUP: "GOOGLESIGNUP"
+	GOOGLELOGIN: "GOOGLE_LOGIN",
+	GOOGLESIGNUP: "GOOGLE_SIGNUP"
 }

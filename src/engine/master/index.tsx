@@ -1,4 +1,5 @@
-import * as Api from '../helper/api'
+import firestore from '../firebaseService'
+
 type MasterType = {
 	param?: any
 	Id?: number
@@ -57,6 +58,10 @@ export default class Master implements MasterType {
 			this.ModifiedOn = props.ModifiedOn
 			this.ModifiedBy = props.ModifiedBy ? props.ModifiedBy : ""
 		}
+	}
+
+	addToFirebase() {
+
 	}
 }
 

@@ -26,7 +26,7 @@ import Master, {
 type NavigationProps = StackNavigationProp<MainStackParamList, "MasterList">
 type Props = {
 	navigation: NavigationProps
-	masters: Master[]
+	masters: MasterState
 }
 
 type State = {
@@ -63,11 +63,11 @@ class MasterListScreen extends React.Component<Props, State> {
 			|| this.state.sortType == MasterSortType.ItemNumberAscending
 			|| this.state.sortType == MasterSortType.DescriptionAscending
 			|| this.state.sortType == MasterSortType.OrderQtyAscending) ? "caret-down" : "caret-up"
-		const masterList = sortMasters(this.props.masters, this.state.sortType)
+		const masterList = sortMasters(this.props.masters.masters, this.state.sortType)
 
 		return (
 			<View>
-				{this.props.isLoading && <ActivityIndicator />}
+				{this.props.masters.isLoading && <ActivityIndicator />}
 				<View style={masterListHeaderStyle.container}>
 					<TouchableOpacity style={masterListHeaderStyle.venderContainer} onPress={() => { this.sort((this.state.sortType == MasterSortType.VendorAscending) ? MasterSortType.VendorDescending : MasterSortType.VendorAscending) }}>
 						<View style={{ flex: 1, flexDirection: "row", }}>
@@ -219,8 +219,7 @@ const masterListItemStyle = StyleSheet.create({
 
 const mapStateToProps = (state: { masters: MasterState; }) => {
 	return {
-		isLoading: state.masters.isLoading,
-		masters: state.masters.masters,
+		masters: state.masters,
 	};
 };
 

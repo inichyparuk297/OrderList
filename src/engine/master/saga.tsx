@@ -3,6 +3,7 @@ import { call, put, takeLatest } from 'redux-saga/effects'
 import Master, { ActionTypes, Action } from '.'
 import * as Api from '../helper/api'
 import { connectSqlServer, executeQuery } from '../sqlserver'
+import firebaseService from '../firebaseService'
 
 function* fetchLoad(action: Action) {
 	try {
@@ -11,11 +12,14 @@ function* fetchLoad(action: Action) {
 		const queryResult = yield call(MSSQL.executeQuery, query)
 		const result: Master[] = []
 		for (let i = 0; i < queryResult.length; i++) {
-			result.push(new Master({ param: queryResult[i] }))
+			let master = new Master({ param: queryResult[i] })
+			yield call(firebaseService.uploadMaster, master)
+			result.push(master)
 		}
 		yield put(Api.onMasterSuccess(result))
 	} catch (error) {
-		yield put(Api.onMasterFailure(error.response))
+		console.log(error)
+		yield put(Api.onMasterFailure(error))
 	}
 }
 
