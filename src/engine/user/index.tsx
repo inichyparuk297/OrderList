@@ -17,7 +17,16 @@ export default class User implements UserType {
 	}
 }
 
-export const Actions = {
-	GOOGLELOGIN: "GOOGLE_LOGIN",
-	GOOGLESIGNUP: "GOOGLE_SIGNUP"
+export type State = {
+	user: User
+}
+
+export type Action = {
+	type: string
+	payload: any
+}
+
+export const ActionTypes = {
+	LOGIN: "LOGIN",
+	SIGNUP: "SIGNUP"
 }

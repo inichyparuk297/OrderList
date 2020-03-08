@@ -1,37 +1,26 @@
 const Lodash = require('lodash')
-import User, { Actions } from '.'
-import firebase from 'react-native-firebase'
-
-type State = {
-	loading: boolean
-	user: User
-	error: string | undefined
-}
-
-type Action = {
-	type: string
-	email: string
-	password: string
-}
+import User, { State, Action, ActionTypes } from '.'
+import * as Api from '../helper/api'
 
 const initialState: State = {
-	loading: false,
-	user: User.sharedInstance(),
-	error: undefined
+	user: new User()
 }
 
-export default function users(state: State = initialState, action: Action): State {
+export default function user(state: State = initialState, action: Action): State {
 	switch (action.type) {
-		case Actions.GOOGLELOGIN: {
-			const newState = Lodash.cloneDeep(state)
+		case ActionTypes.LOGIN: {
+			const newState: State = Lodash.cloneDeep(state)
+			if (action.payload) {
+				newState.user.username = (action.payload as User).username
+				newState.user.password = (action.payload as User).password
+			}
 			return newState
 		}
-		case Actions.GOOGLESIGNUP: {
-			const newState = Lodash.cloneDeep(state)
-			try {
-
-			} catch (e) {
-				newState.error = e.message
+		case ActionTypes.SIGNUP: {
+			const newState: State = Lodash.cloneDeep(state)
+			if (action.payload) {
+				newState.user.username = (action.payload as User).username
+				newState.user.password = (action.payload as User).password
 			}
 			return newState
 		}

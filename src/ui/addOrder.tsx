@@ -7,6 +7,7 @@ import {
 } from 'react-native'
 const { connect } = require('react-redux')
 import { Dispatch } from 'redux'
+import { firebase } from '@react-native-firebase/auth'
 import { StackNavigationProp } from '@react-navigation/stack'
 import Icon from 'react-native-vector-icons/FontAwesome'
 const { Button } = require('react-native-material-ui')
@@ -17,7 +18,14 @@ import Vendor, {
 	State as VendorState,
 	ActionTypes as VendorActionTypes
 } from '../engine/vendor'
-import Order, { ActionType as OrderActionType } from '../engine/order'
+import Order, { State as OrderState, ActionType as OrderActionType } from '../engine/order'
+import Master, {
+	State as MasterState
+} from '../engine/master'
+import User, {
+	State as UserState
+} from '../engine/user'
+import masters from '../engine/master/reducer'
 
 type NavigationProps = StackNavigationProp<MainStackParamList, "AddOrder">
 type Props = {
@@ -25,11 +33,14 @@ type Props = {
 	vendors: VendorState
 	addOrder: any
 	loadVendors: any
+	master: Master
+	user: User
+	selectedMaster: Master
+	orders: OrderState
 }
 
 type State = {
 	vendor?: Vendor
-	itemNumber: string
 	description: string
 }
 
@@ -41,7 +52,6 @@ class AddOrderScreen extends React.Component<Props, State> {
 
 		this.state = {
 			vendor: this.props.vendors.venders.length > 0 ? this.props.vendors.venders[0] : undefined,
-			itemNumber: "",
 			description: "",
 		}
 
@@ -53,11 +63,19 @@ class AddOrderScreen extends React.Component<Props, State> {
 	}
 
 	onAddBtnPressed() {
+		let orderId = 0
+		this.props.orders.orders.map((order: Order, index: number) => {
+			if (order.Id > orderId) {
+				orderId = order.Id
+			}
+		})
+		orderId = orderId + 1
+
 		const vendor = this.state.vendor
-		const itemNumber = this.state.itemNumber
 		const description = this.state.description
-		if (vendor && itemNumber && description) {
-			const order = new Order({ VendorId: vendor.Id, ItemNumber: itemNumber, Description: description, CreatedBy: vendor.Name, CreatedOn: new Date() })
+		const currentUser = firebase.auth().currentUser
+		if (vendor && description) {
+			const order: Order = new Order({ Id: orderId, VendorId: vendor.Id, ItemNumber: this.props.selectedMaster.ItemNumber, Description: description, CreatedBy: currentUser.email })
 			this.props.addOrder(order)
 			this.props.navigation.goBack()
 		}
@@ -90,18 +108,6 @@ class AddOrderScreen extends React.Component<Props, State> {
 							value={selectedVendorPickerValue}
 							useNativeAndroidPickerStyle={false}
 							textInputProps={{ underlineColor: 'yellow' }}
-						/>
-					</View>
-					<View style={styles.itemNumberContainer}>
-						<Text style={styles.itemNumberTitle}>Item Number:</Text>
-						<TextInput
-							style={styles.itemNumberText}
-							placeholder="Item Number here..."
-							placeholderTextColor='gray'
-							value={this.state.itemNumber}
-							onChangeText={text => {
-								this.setState({ itemNumber: text });
-							}}
 						/>
 					</View>
 					<View style={styles.descriptionContainer}>
@@ -204,9 +210,12 @@ const pickerSelectStyles = StyleSheet.create({
 	},
 });
 
-const mapStateToProps = (state: { vendors: VendorState; }) => {
+const mapStateToProps = (state: { vendors: VendorState, user: UserState, masters: MasterState, orders: OrderState }) => {
 	return {
 		vendors: state.vendors,
+		user: state.user,
+		orders: state.orders,
+		selectedMaster: state.masters.selectedMaster
 	};
 };
 

@@ -51,6 +51,7 @@ class MasterListScreen extends React.Component<Props, State> {
 	}
 
 	onMasterListItemPressed = (item: Master) => {
+		this.props.selectMaster(item)
 		this.props.navigation.navigate("OrderList", { master: item })
 	}
 
@@ -225,7 +226,8 @@ const mapStateToProps = (state: { masters: MasterState; }) => {
 
 const mapDispatchToProps = (dispatch: Dispatch) => {
 	return {
-		loadMasters: () => { dispatch({ type: MasterActionTypes.LOAD }) }
+		loadMasters: () => { dispatch({ type: MasterActionTypes.LOAD }) },
+		selectMaster: (master: Master) => { dispatch({ type: MasterActionTypes.SELECT_MASTER, master: master }) }
 	};
 };
 

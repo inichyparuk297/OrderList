@@ -8,7 +8,7 @@ type OrderType = {
 	Unit?: string
 	CasePack?: string
 	Cost?: number
-	CreatedBy?: string
+	CreatedBy?: string | null
 	CreatedOn?: any
 	ModifiedBy?: string
 	ModifiedOn?: any // date

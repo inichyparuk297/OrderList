@@ -37,7 +37,7 @@ class OrderListScreen extends React.Component<Props, State> {
 		this.props.navigation.setOptions({
 			headerShown: true, title: "Orders",
 			headerRight: () => (
-				<TouchableOpacity style={styles.add} onPress={() => props.navigation.navigate("AddOrder")}>
+				<TouchableOpacity style={styles.add} onPress={this.onAddOrderBtnPressed}>
 					<Icon name="plus" size={20} />
 				</TouchableOpacity>
 			)
@@ -46,6 +46,10 @@ class OrderListScreen extends React.Component<Props, State> {
 
 	componentDidMount() {
 		this.props.loadOrder()
+	}
+
+	onAddOrderBtnPressed = () => {
+		this.props.navigation.navigate("AddOrder", { master: this.props.master })
 	}
 
 	render() {
@@ -173,7 +177,7 @@ const orderListItemStyle = StyleSheet.create({
 	}
 })
 
-const mapStateToProps = (state: { orders: OrderState; }) => {
+const mapStateToProps = (state: { orders: OrderState }) => {
 	return {
 		orders: state.orders,
 	};

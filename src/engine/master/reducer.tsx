@@ -5,7 +5,8 @@ import * as Api from '../helper/api'
 
 const initialState: State = {
 	isLoading: false,
-	masters: []
+	masters: [],
+	selectedMaster: undefined
 }
 
 export default function masters(state: State = initialState, action: any) {
@@ -13,6 +14,11 @@ export default function masters(state: State = initialState, action: any) {
 		case ActionTypes.LOAD: {
 			const newState: State = Lodash.cloneDeep(state)
 			newState.isLoading = true
+			return newState
+		}
+		case ActionTypes.SELECT_MASTER: {
+			const newState: State = Lodash.cloneDeep(state)
+			newState.selectedMaster = (action as Action).master
 			return newState
 		}
 		case Api.ActionType.MASTER_SUCCESS: {

@@ -107,6 +107,7 @@ export function sort(masters: Master[], sortType: number): Master[] {
 export type State = {
 	isLoading: boolean
 	masters: Master[]
+	selectedMaster?: Master
 }
 
 export type Action = {
@@ -118,4 +119,5 @@ export type Action = {
 
 export const ActionTypes = {
 	LOAD: "LOAD_MASTER",
+	SELECT_MASTER: "SELECT_MASTER"
 }

@@ -1,4 +1,5 @@
 import { call, put, takeLatest } from 'redux-saga/effects'
+import { firebase } from '@react-native-firebase/auth'
 
 import Order, { ActionType, Action } from '.'
 import * as Api from '../helper/api'
@@ -8,7 +9,7 @@ import firebaseService from '../firebaseService'
 function* fetchLoad(action: Action) {
 	try {
 		const MSSQL = yield call(connectSqlServer)
-		let query = "SELECT * FROM OrderItemList"
+		let query = `SELECT * FROM OrderItemList WHERE CreatedBy Like \'${firebase.auth().currentUser?.email}\';`
 		const queryResult = yield call(MSSQL.executeQuery, query)
 		const result: Order[] = []
 		for (let i = 0; i < queryResult.length; i++) {
@@ -24,12 +25,12 @@ function* fetchLoad(action: Action) {
 
 function* addOrder(action: Action) {
 	try {
-		const query = `INSERT INTO OrderItemList (VendorId, ItemNumber, Description, OrderQty, Unit, CasePack, Cost) VALUES (${action.order.VendorId}, \'${action.order.ItemNumber}\', \'${action.order.Description}\', ${action.order.OrderQty}, \'${action.order.Unit}\', \'${action.order.CasePack}\', ${action.order.Cost});`
+		const query = `INSERT INTO OrderItemList (VendorId, ItemNumber, Description, OrderQty, Unit, CasePack, Cost, CreatedBy, CreatedOn) VALUES (${action.order.VendorId}, \'${action.order.ItemNumber}\', \'${action.order.Description}\', ${action.order.OrderQty}, \'${action.order.Unit}\', \'${action.order.CasePack}\', ${action.order.Cost}, \'${action.order.CreatedBy}\', GETDATE());`
+		console.log(query)
 		const rows = yield call(executeQuery, query)
-		yield call(firebaseService.uploadOrder, action.order)
 		yield put(Api.onOrderSuccess(rows[0]))
 	} catch (error) {
-		yield put({ type: ActionType.LOAD })
+		yield put(Api.onOrderSuccess(action.order))
 		yield put(Api.onOrderFailure(error))
 	}
 }

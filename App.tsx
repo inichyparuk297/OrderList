@@ -8,10 +8,10 @@ import { Navigator, ScreenId } from './src/ui'
 
 const { store, persistor } = configureStore()
 
-persistor.purge()
-
 const uiTheme = {
 };
+
+persistor.purge()
 
 const App: React.ReactNode = () => {
 	const theme = getTheme(uiTheme)

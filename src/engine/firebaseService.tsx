@@ -13,7 +13,7 @@ class FirebaseService {
 			const ref = firestore().collection('MasterItemList')
 			const doc = await ref.doc(`${master.Id}`).get()
 			if (doc.exists) { return }
-			await ref.doc(`${master.Id}`).set(master)
+			ref.doc(`${master.Id}`).set(master)
 		} catch (error) {
 			console.log(error)
 		}
