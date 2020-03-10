@@ -41,7 +41,7 @@ type Props = {
 
 type State = {
 	vendor?: Vendor
-	description: string
+	orderQty: string
 }
 
 class AddOrderScreen extends React.Component<Props, State> {
@@ -52,7 +52,7 @@ class AddOrderScreen extends React.Component<Props, State> {
 
 		this.state = {
 			vendor: this.props.vendors.venders.length > 0 ? this.props.vendors.venders[0] : undefined,
-			description: "",
+			orderQty: this.props.selectedMaster.OrderQty.toString(),
 		}
 
 		this.onAddBtnPressed = this.onAddBtnPressed.bind(this)
@@ -60,6 +60,21 @@ class AddOrderScreen extends React.Component<Props, State> {
 
 	componentDidMount() {
 		this.props.loadVendors()
+	}
+
+	onOrderQuantityChanged = (value: string) => {
+		if (value === "") {
+			this.setState({ orderQty: "0" })
+			return
+		}
+
+		let quantity = parseInt(value).toString()
+		const totalQuantity = this.props.selectedMaster.OrderQty
+		if (parseInt(value) > totalQuantity) {
+			quantity = totalQuantity.toString()
+		}
+
+		this.setState({ orderQty: quantity })
 	}
 
 	onAddBtnPressed() {
@@ -71,14 +86,24 @@ class AddOrderScreen extends React.Component<Props, State> {
 		})
 		orderId = orderId + 1
 
-		const vendor = this.state.vendor
-		const description = this.state.description
-		const currentUser = firebase.auth().currentUser
-		if (vendor && description) {
-			const order: Order = new Order({ Id: orderId, VendorId: vendor.Id, ItemNumber: this.props.selectedMaster.ItemNumber, Description: description, CreatedBy: currentUser.email })
-			this.props.addOrder(order)
-			this.props.navigation.goBack()
+		const orderQuantity = parseInt(this.state.orderQty)
+		if (orderQuantity <= 0) {
+			alert("Order Quantity must be 1 at least or greater.")
+			return
 		}
+
+		const currentUser = firebase.auth().currentUser
+		const order: Order = new Order({
+			Id: orderId,
+			VendorId: this.props.selectedMaster.VendorId,
+			ItemNumber: this.props.selectedMaster.ItemNumber,
+			Description: this.props.selectedMaster.Description,
+			CreatedBy: currentUser?.email,
+			OrderQty: orderQuantity
+		})
+
+		this.props.addOrder(order)
+		this.props.navigation.goBack()
 	}
 
 	render() {
@@ -88,37 +113,36 @@ class AddOrderScreen extends React.Component<Props, State> {
 		})
 		const selectedVendorPickerValue = (this.state.vendor) ? this.state.vendor.Name : ""
 		return (
-			<View style={{ flex: 1, flexDirection: "row", justifyContent: "center" }}>
+			<View style={{ flex: 1, flexDirection: "column", justifyContent: "center", alignContent: "center" }}>
 				<View style={styles.container}>
 					<Text style={styles.title}>Add Order</Text>
-					<View style={styles.vendorContainer}>
-						<Text style={styles.vendorTitle}>Vendor:</Text>
-						<RNPickerSelect
-							placeholder={{ label: 'Select a vendor...', value: null, color: '#000000', }}
-							items={vendorPickerData}
-							onValueChange={(value, index) => {
-								this.props.vendors.venders.map((item, i) => {
-									const vendor = this.props.vendors.venders[i]
-									if (value == vendor.Name) {
-										this.setState({ vendor: vendor })
-									}
-								})
-							}}
-							style={{ ...pickerSelectStyles, }}
-							value={selectedVendorPickerValue}
-							useNativeAndroidPickerStyle={false}
-							textInputProps={{ underlineColor: 'yellow' }}
-						/>
+					<View style={styles.subContainer}>
+						<Text style={styles.subTitle} numberOfLines={1}>Vendor ID:</Text>
+						<Text style={styles.subText} numberOfLines={1}>{this.props.selectedMaster.VendorId}</Text>
 					</View>
-					<View style={styles.descriptionContainer}>
-						<Text style={styles.descriptionTitle}>Description:</Text>
+					<View style={styles.subContainer}>
+						<Text style={styles.subTitle} numberOfLines={1}>Item Number:</Text>
+						<Text style={styles.subTitle} numberOfLines={1}>{this.props.selectedMaster.ItemNumber}</Text>
+					</View>
+					<View style={styles.subContainer}>
+						<Text style={styles.subTitle} numberOfLines={1}>Description:</Text>
+						<Text style={styles.subTitle} numberOfLines={1}>{this.props.selectedMaster.Description}</Text>
+					</View>
+					<View style={styles.subContainer}>
+						<Text style={styles.subTitle} numberOfLines={1}>Total Quantity:</Text>
+						<Text style={styles.subTitle} numberOfLines={1}>{this.props.selectedMaster.OrderQty}</Text>
+					</View>
+					<View style={styles.subContainer}>
+						<Text style={styles.subTitle} numberOfLines={1}>Order Quantity:</Text>
 						<TextInput
-							style={styles.descriptionText}
-							placeholder="Description here..."
+							style={styles.subText}
+							numberOfLines={1}
+							keyboardType="number-pad"
+							placeholder="Order Quanity"
 							placeholderTextColor='gray'
-							value={this.state.description}
+							value={this.state.orderQty}
 							onChangeText={text => {
-								this.setState({ description: text });
+								this.onOrderQuantityChanged(text)
 							}}
 						/>
 					</View>
@@ -134,67 +158,44 @@ class AddOrderScreen extends React.Component<Props, State> {
 
 const styles = StyleSheet.create({
 	container: {
-		left: 10,
-		right: 10,
-		padding: 10,
-		height: 290,
+		marginLeft: 20,
+		marginRight: 20,
 		flexDirection: "column",
-		alignSelf: "center",
 		backgroundColor: 'rgba(255,255,255,1)'
 	},
 	title: {
+		padding: 20,
 		color: 'rgba(0,0,0,1)',
-		fontSize: 30,
+		fontSize: 20,
 		textAlign: "center",
 	},
-	vendorContainer: {
-		marginTop: 20,
+	subContainer: {
 		flexDirection: "row",
 		justifyContent: "center",
 	},
-	vendorTitle: {
+	subTitle: {
+		flex: 1,
 		padding: 10,
 		color: 'rgba(0,0,0,1)',
-		fontSize: 20,
+		fontSize: 15,
 	},
-	itemNumberContainer: {
-		flexDirection: "row",
-		justifyContent: "center",
-	},
-	itemNumberTitle: {
+	subText: {
+		flex: 1,
 		padding: 10,
 		color: 'rgba(0,0,0,1)',
-		fontSize: 20,
-	},
-	itemNumberText: {
-		padding: 10,
-		color: 'rgba(0,0,0,1)',
-		fontSize: 20,
-	},
-	descriptionContainer: {
-		flexDirection: "row",
-		justifyContent: "center",
-	},
-	descriptionTitle: {
-		padding: 10,
-		color: 'rgba(0,0,0,1)',
-		fontSize: 20,
-	},
-	descriptionText: {
-		padding: 10,
-		color: 'rgba(0,0,0,1)',
-		fontSize: 20,
+		fontSize: 15,
 	},
 	buttonContainer: {
-		marginTop: 20,
-		flex: 1,
+		margin: 20,
 		flexDirection: "row",
-		justifyContent: "space-between"
+		justifyContent: "space-evenly"
 	},
 	cancel: {
+		flex: 1,
 		marginLeft: 20,
 	},
 	add: {
+		flex: 1,
 		marginRight: 20,
 	}
 })

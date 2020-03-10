@@ -1,3 +1,5 @@
+import Master from "../master"
+
 type OrderType = {
 	param?: any
 	Id?: number
