@@ -45,7 +45,7 @@ class LoginScreen extends React.Component<Props, State> {
 	onAuthStateChanged = (user: any) => {
 		if (user) {
 			this.props.login(this.state.username, this.state.password)
-			this.props.navigation.navigate("MasterList");
+			this.props.navigation.navigate("OrderList");
 		}
 	}
 

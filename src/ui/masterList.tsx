@@ -10,6 +10,7 @@ import {
 	ActivityIndicator,
 } from 'react-native'
 import { Dispatch } from 'redux'
+import { SearchBar } from 'react-native-elements'
 const { ListItem, ThemeContext, Divider } = require('react-native-material-ui')
 import { StackNavigationProp } from '@react-navigation/stack'
 import Icon from 'react-native-vector-icons/FontAwesome'
@@ -32,6 +33,7 @@ type Props = {
 type State = {
 	masters: Master[]
 	sortType: number
+	search: string
 }
 
 class MasterListScreen extends React.Component<Props, State> {
@@ -41,22 +43,42 @@ class MasterListScreen extends React.Component<Props, State> {
 		this.props.navigation.setOptions({ headerShown: true, title: "Masters" })
 
 		this.state = {
-			masters: this.props.masters,
-			sortType: MasterSortType.VendorAscending
+			masters: this.props.masters.masters,
+			sortType: MasterSortType.VendorAscending,
+			search: ""
 		}
-	}
-
-	componentDidMount() {
-		this.props.loadMasters()
 	}
 
 	onMasterListItemPressed = (item: Master) => {
 		this.props.selectMaster(item)
-		this.props.navigation.navigate("OrderList", { master: item })
+		this.props.navigation.navigate("AddOrder")
 	}
 
 	sort = (type: number) => {
 		this.setState({ sortType: type })
+	}
+
+	onSearchKeyChanged = (search: string) => {
+		this.search(search);
+	};
+
+	search(search: string) {
+		const searchResult = this.props.masters.masters.filter(function (master: Master) {
+			const venderId = master.VendorId.toString()
+			const itemNumber = master.ItemNumber
+			const description = master.Description
+
+			if (venderId.indexOf(search) !== -1) { return true }
+			if (itemNumber.indexOf(search) !== -1) { return true }
+			if (description.indexOf(search) !== -1) { return true }
+
+			return false
+		});
+
+		this.setState({
+			masters: searchResult,
+			search: search
+		});
 	}
 
 	render() {
@@ -64,11 +86,18 @@ class MasterListScreen extends React.Component<Props, State> {
 			|| this.state.sortType == MasterSortType.ItemNumberAscending
 			|| this.state.sortType == MasterSortType.DescriptionAscending
 			|| this.state.sortType == MasterSortType.OrderQtyAscending) ? "caret-down" : "caret-up"
-		const masterList = sortMasters(this.props.masters.masters, this.state.sortType)
+		const masterList = sortMasters(this.state.masters, this.state.sortType)
 
 		return (
 			<View>
 				{this.props.masters.isLoading && <ActivityIndicator />}
+				<SearchBar
+					inputContainerStyle={{ backgroundColor: 'white' }}
+					containerStyle={{ backgroundColor: 'white' }}
+					placeholder="Search Products..."
+					onChangeText={this.onSearchKeyChanged}
+					value={this.state.search}
+				/>
 				<View style={masterListHeaderStyle.container}>
 					<TouchableOpacity style={masterListHeaderStyle.venderContainer} onPress={() => { this.sort((this.state.sortType == MasterSortType.VendorAscending) ? MasterSortType.VendorDescending : MasterSortType.VendorAscending) }}>
 						<View style={{ flex: 1, flexDirection: "row", }}>
@@ -226,7 +255,7 @@ const mapStateToProps = (state: { masters: MasterState; }) => {
 
 const mapDispatchToProps = (dispatch: Dispatch) => {
 	return {
-		loadMasters: () => { dispatch({ type: MasterActionTypes.LOAD }) },
+		loadMaster: () => { dispatch({ type: MasterActionTypes.LOAD }) },
 		selectMaster: (master: Master) => { dispatch({ type: MasterActionTypes.SELECT_MASTER, master: master }) }
 	};
 };

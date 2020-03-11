@@ -13,7 +13,7 @@ function* fetchLoad(action: Action) {
 		const result: Master[] = []
 		for (let i = 0; i < queryResult.length; i++) {
 			let master = new Master({ param: queryResult[i] })
-			yield call(firebaseService.uploadMaster, master)
+			firebaseService.uploadMaster(master)
 			result.push(master)
 		}
 		yield put(Api.onMasterSuccess(result))

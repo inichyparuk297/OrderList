@@ -11,13 +11,14 @@ import {
 	ActivityIndicator,
 } from 'react-native'
 import { Dispatch } from 'redux'
+import ActionSheet from 'react-native-actionsheet'
 const { ListItem, ThemeContext, Divider } = require('react-native-material-ui')
 import Icon from 'react-native-vector-icons/FontAwesome'
 import { StackNavigationProp } from '@react-navigation/stack'
 
 import { MainStackParamList, ScreenId } from '.'
 import Order, { State as OrderState, ActionType as OrderActionType } from '../engine/order'
-import Master from '../engine/master'
+import Master, { State as MasterState, ActionTypes as MasterActionTypes } from '../engine/master'
 
 type NavigationProps = StackNavigationProp<MainStackParamList, "MasterList">
 type Props = {
@@ -28,6 +29,7 @@ type Props = {
 
 type State = {
 	orders: Order[]
+	selectedOrder: Order
 }
 
 class OrderListScreen extends React.Component<Props, State> {
@@ -49,13 +51,30 @@ class OrderListScreen extends React.Component<Props, State> {
 	}
 
 	onAddOrderBtnPressed = () => {
-		this.props.navigation.navigate("AddOrder", { master: this.props.master })
+		this.props.navigation.navigate("MasterList")
+	}
+
+	onOrderItemPressed = (item: Order) => {
+		this.setState({ selectedOrder: item })
+		this.actionSheet.show()
+	}
+
+	onEditPressed = () => {
+		this.props.navigation.navigate("UpdateOrder", { order: this.state.selectedOrder })
+	}
+
+	onDeletePressed = () => {
+		this.deleteConfirmActionSheet.show()
+	}
+
+	onDeleteConfirmPressed = () => {
+		this.props.deleteOrder(this.state.selectedOrder)
 	}
 
 	render() {
 		return (
 			<View>
-				{this.props.orders.isLoading && <ActivityIndicator />}
+				{(this.props.orders.isLoading || this.props.masters.isLoading) && <ActivityIndicator />}
 				<View style={orderListHeaderStyle.container}>
 					<TouchableOpacity style={orderListHeaderStyle.venderContainer}>
 						<Text style={orderListHeaderStyle.vender}>VENDER</Text>
@@ -74,7 +93,7 @@ class OrderListScreen extends React.Component<Props, State> {
 					<FlatList
 						data={this.props.orders.orders}
 						renderItem={({ item }) =>
-							<TouchableOpacity>
+							<TouchableOpacity onPress={() => { this.onOrderItemPressed(item) }}>
 								<View style={orderListItemStyle.container}>
 									<Text style={orderListItemStyle.vender}>{item.VendorId}</Text>
 									<Text style={orderListItemStyle.item}>{item.ItemNumber}</Text>
@@ -86,6 +105,44 @@ class OrderListScreen extends React.Component<Props, State> {
 						}
 					/>
 				</ScrollView>
+				<ActionSheet
+					ref={o => this.actionSheet = o}
+					title=""
+					options={['Add', 'Edit', 'Delete', 'Cancel']}
+					cancelButtonIndex={3}
+					destructiveButtonIndex={2}
+					onPress={(index) => {
+						switch (index) {
+							case 0: {
+								this.props.navigation.navigate("MasterList")
+								return
+							}
+							case 1: {
+								this.onEditPressed();
+								return
+							}
+							case 2: {
+								this.onDeletePressed();
+								return
+							}
+						}
+					}}
+				/>
+				<ActionSheet
+					ref={o => this.deleteConfirmActionSheet = o}
+					title="Are you sure want to delete the order?"
+					options={['YES', 'NO']}
+					cancelButtonIndex={1}
+					destructiveButtonIndex={0}
+					onPress={(index) => {
+						switch (index) {
+							case 0: {
+								this.onDeleteConfirmPressed()
+								return
+							}
+						}
+					}}
+				/>
 			</View>
 		)
 	}
@@ -177,15 +234,17 @@ const orderListItemStyle = StyleSheet.create({
 	}
 })
 
-const mapStateToProps = (state: { orders: OrderState }) => {
+const mapStateToProps = (state: { orders: OrderState, masters: MasterState }) => {
 	return {
+		masters: state.masters,
 		orders: state.orders,
 	};
 };
 
 const mapDispatchToProps = (dispatch: Dispatch) => {
 	return {
-		loadOrder: () => { dispatch({ type: OrderActionType.LOAD }) }
+		loadOrder: () => { dispatch({ type: OrderActionType.LOAD }) },
+		deleteOrder: (order: Order) => { dispatch({ type: OrderActionType.DELETE_ORDER, order: order }) }
 	};
 };
 

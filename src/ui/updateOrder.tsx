@@ -26,40 +26,39 @@ import User, {
 	State as UserState
 } from '../engine/user'
 import masters from '../engine/master/reducer'
+import { Route } from '@react-navigation/native'
 
 type NavigationProps = StackNavigationProp<MainStackParamList, "AddOrder">
 type Props = {
+	route: Route
 	navigation: NavigationProps
-	vendors: VendorState
-	addOrder: any
-	loadVendors: any
-	master: Master
-	user: User
-	selectedMaster: Master
-	orders: OrderState
+	order: Order
+	masters: Master[]
+	updateOrder: any
 }
 
 type State = {
-	vendor?: Vendor
+	order: Order
+	master?: Master
 	orderQty: string
 }
 
-class AddOrderScreen extends React.Component<Props, State> {
+class UpdateOrderScreen extends React.Component<Props, State> {
 	constructor(props: Props) {
 		super(props)
 
 		this.props.navigation.setOptions({ headerShown: false, cardStyle: { backgroundColor: 'rgba(0,0,0,0.8)', opacity: 1 } })
 
+		const { route } = this.props
+		const { order } = route.params
+
 		this.state = {
-			vendor: this.props.vendors.venders.length > 0 ? this.props.vendors.venders[0] : undefined,
-			orderQty: "1"
+			master: undefined,
+			order: order,
+			orderQty: (order as Order).OrderQty.toString(),
 		}
 
-		this.onAddBtnPressed = this.onAddBtnPressed.bind(this)
-	}
-
-	componentDidMount() {
-		this.props.loadVendors()
+		this.onUpdateBtnPressed = this.onUpdateBtnPressed.bind(this)
 	}
 
 	onOrderQuantityChanged = (value: string) => {
@@ -69,7 +68,7 @@ class AddOrderScreen extends React.Component<Props, State> {
 		}
 
 		let quantity = parseInt(value).toString()
-		const totalQuantity = this.props.selectedMaster.OrderQty
+		const totalQuantity = this.state.master!.OrderQty
 		if (parseInt(value) > totalQuantity) {
 			quantity = totalQuantity.toString()
 		}
@@ -77,15 +76,7 @@ class AddOrderScreen extends React.Component<Props, State> {
 		this.setState({ orderQty: quantity })
 	}
 
-	onAddBtnPressed() {
-		let orderId = 0
-		this.props.orders.orders.map((order: Order, index: number) => {
-			if (order.Id > orderId) {
-				orderId = order.Id
-			}
-		})
-		orderId = orderId + 1
-
+	onUpdateBtnPressed() {
 		const orderQuantity = parseInt(this.state.orderQty)
 		if (orderQuantity <= 0) {
 			alert("Order Quantity must be 1 at least or greater.")
@@ -93,44 +84,53 @@ class AddOrderScreen extends React.Component<Props, State> {
 		}
 
 		const currentUser = firebase.auth().currentUser
-		const order: Order = new Order({
-			Id: orderId,
-			VendorId: this.props.selectedMaster.VendorId,
-			ItemNumber: this.props.selectedMaster.ItemNumber,
-			Description: this.props.selectedMaster.Description,
-			CreatedBy: currentUser?.email,
-			OrderQty: orderQuantity
-		})
 
-		this.props.addOrder(order)
+		const order = this.state.order
+		order.OrderQty = orderQuantity
+		order.ModifiedBy = (currentUser) ? currentUser.email : ""
+
+		this.props.updateOrder(order)
 		this.props.navigation.goBack()
 	}
 
-	render() {
-		const vendorPickerData: any[] = []
-		this.props.vendors.venders.map((vender: Vendor, index: number) => {
-			vendorPickerData.push({ label: vender.Name, value: vender.Name })
+	findMaster() {
+		const order = this.state.order
+		const masters = this.props.masters.filter(function (master: Master) {
+			if (master.VendorId === order.VendorId && master.ItemNumber === order.ItemNumber && master.Description === order.Description) {
+				return true
+			}
+			return false
 		})
-		const selectedVendorPickerValue = (this.state.vendor) ? this.state.vendor.Name : ""
+		if (masters.length > 0) {
+			return masters[0]
+		}
+		return undefined
+	}
+
+	render() {
+		const master = this.findMaster()
+		if (!this.state.master && master) {
+			this.setState({ master: master })
+		}
 		return (
 			<View style={{ flex: 1, flexDirection: "column", justifyContent: "center", alignContent: "center" }}>
 				<View style={styles.container}>
-					<Text style={styles.title}>Add Order</Text>
+					<Text style={styles.title}>Edit Order</Text>
 					<View style={styles.subContainer}>
 						<Text style={styles.subTitle} numberOfLines={1}>Vendor ID:</Text>
-						<Text style={styles.subText} numberOfLines={1}>{this.props.selectedMaster.VendorId}</Text>
+						<Text style={styles.subText} numberOfLines={1}>{this.state.master && this.state.master.VendorId}</Text>
 					</View>
 					<View style={styles.subContainer}>
 						<Text style={styles.subTitle} numberOfLines={1}>Item Number:</Text>
-						<Text style={styles.subTitle} numberOfLines={1}>{this.props.selectedMaster.ItemNumber}</Text>
+						<Text style={styles.subTitle} numberOfLines={1}>{this.state.master && this.state.master.ItemNumber}</Text>
 					</View>
 					<View style={styles.subContainer}>
 						<Text style={styles.subTitle} numberOfLines={1}>Description:</Text>
-						<Text style={styles.subTitle} numberOfLines={1}>{this.props.selectedMaster.Description}</Text>
+						<Text style={styles.subTitle} numberOfLines={1}>{this.state.master && this.state.master.Description}</Text>
 					</View>
 					<View style={styles.subContainer}>
 						<Text style={styles.subTitle} numberOfLines={1}>Total Quantity:</Text>
-						<Text style={styles.subTitle} numberOfLines={1}>{this.props.selectedMaster.OrderQty}</Text>
+						<Text style={styles.subTitle} numberOfLines={1}>{this.state.master && this.state.master.OrderQty}</Text>
 					</View>
 					<View style={styles.subContainer}>
 						<Text style={styles.subTitle} numberOfLines={1}>Order Quantity:</Text>
@@ -148,7 +148,7 @@ class AddOrderScreen extends React.Component<Props, State> {
 					</View>
 					<View style={styles.buttonContainer}>
 						<Button raised primary style={styles.cancel} text="Cancel" onPress={() => this.props.navigation.goBack()} />
-						<Button raised primary style={styles.add} text="Add" onPress={this.onAddBtnPressed} />
+						<Button raised primary style={styles.add} text="Change" onPress={this.onUpdateBtnPressed} />
 					</View>
 				</View>
 			</View>
@@ -213,18 +213,14 @@ const pickerSelectStyles = StyleSheet.create({
 
 const mapStateToProps = (state: { vendors: VendorState, user: UserState, masters: MasterState, orders: OrderState }) => {
 	return {
-		vendors: state.vendors,
-		user: state.user,
-		orders: state.orders,
-		selectedMaster: state.masters.selectedMaster
+		masters: state.masters.masters
 	};
 };
 
 const mapDispatchToProps = (dispatch: Dispatch) => {
 	return {
-		loadVendors: () => { dispatch({ type: VendorActionTypes.LOAD }) },
-		addOrder: (order: Order) => dispatch({ type: OrderActionType.ADD_ORDER, order: order })
+		updateOrder: (order: Order) => dispatch({ type: OrderActionType.UPDATE_ORDER, order: order })
 	};
 };
 
-export default connect(mapStateToProps, mapDispatchToProps)(AddOrderScreen);
+export default connect(mapStateToProps, mapDispatchToProps)(UpdateOrderScreen);

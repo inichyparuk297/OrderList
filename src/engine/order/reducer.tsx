@@ -27,7 +27,17 @@ export default function orders(state: State = initialState, action: any): State 
 			if ((action as Api.Action).result instanceof Order) {
 				const order: Order = ((action as Api.Action).result as Order)
 				if (order) {
-					newState.orders.push(order)
+					const filterdOrders = newState.orders.filter(function (item: Order) { return item.Id === order.Id })
+					if (filterdOrders.length > 0) {
+						for (let i = 0; i < newState.orders.length; i++) {
+							let item = newState.orders[i]
+							if (item.Id === order.Id) {
+								newState.orders[i] = order
+							}
+						}
+					} else {
+						newState.orders.push(order)
+					}
 					firebaseService.uploadOrder(order)
 				}
 			} else {

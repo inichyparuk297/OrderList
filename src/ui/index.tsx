@@ -6,6 +6,7 @@ import LoginScreen from './loginScreen'
 import MasterListScreen from './masterList'
 import OrderListScreen from './orderList'
 import AddOrderScreen from './addOrder'
+import UpdateOrderScreen from './updateOrder'
 
 import Master from '../engine/master'
 import Order from '../engine/order'
@@ -30,6 +31,9 @@ export type MainStackParamList = {
 	}
 	AddOrder: {
 		vendors: Vendor[]
+	}
+	UpdateOrder: {
+		order: Order
 	}
 }
 
@@ -69,6 +73,10 @@ export class Navigator extends Component {
 					<RootStack.Screen
 						name="AddOrder"
 						component={AddOrderScreen}
+					/>
+					<RootStack.Screen
+						name="UpdateOrder"
+						component={UpdateOrderScreen}
 					/>
 				</RootStack.Navigator>
 			</NavigationContainer >
