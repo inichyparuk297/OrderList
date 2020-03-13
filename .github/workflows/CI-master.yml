@@ -1,0 +1,29 @@
+name: CI-MASTER
+
+on:
+  push:
+    branches: [master]
+    
+
+jobs:
+  build:
+
+    runs-on: ubuntu-latest
+    container: siberian5/openjdk8-androidsdk28-nodejs13
+    
+    steps:
+    - uses: actions/checkout@v2
+    - name: Project build
+      run: |
+        npm install
+        npx react-native run-android --tasks assembleRelease
+        mkdir out
+        mv android/app/build/outputs/apk/release/* out/
+    - name: Upload artifact
+      uses: actions/upload-artifact@v1.0.0
+      with:
+        # Artifact name
+        name: orderlist-master
+        # Directory containing files to upload
+        path: out
+
